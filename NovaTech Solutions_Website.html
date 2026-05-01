@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>XAVORIS Solutions</title>
+
+<style>
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: Arial, sans-serif;
+}
+
+body {
+  background: #0b1220;
+  color: white;
+}
+
+/* NAV */
+nav {
+  position: fixed;
+  top: 0;
+  width: 100%;
+  background: rgba(11,18,32,0.85);
+  backdrop-filter: blur(10px);
+  display: flex;
+  justify-content: space-between;
+  padding: 15px 40px;
+  z-index: 1000;
+}
+
+nav a {
+  color: #cbd5e1;
+  margin-left: 20px;
+  text-decoration: none;
+}
+
+nav a:hover {
+  color: white;
+}
+
+/* HERO */
+.hero {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  background: radial-gradient(circle at top, #1e3a8a, #0b1220);
+  padding: 20px;
+}
+
+.hero h1 {
+  font-size: 60px;
+  letter-spacing: 2px;
+}
+
+.hero p {
+  margin-top: 15px;
+  color: #cbd5e1;
+  max-width: 600px;
+}
+
+.btn {
+  margin-top: 25px;
+  padding: 12px 22px;
+  background: #3b82f6;
+  color: white;
+  border-radius: 10px;
+  text-decoration: none;
+  font-weight: bold;
+  display: inline-block;
+}
+
+/* SECTIONS */
+section {
+  padding: 120px 20px;
+  max-width: 1100px;
+  margin: auto;
+}
+
+h2 {
+  text-align: center;
+  font-size: 36px;
+  margin-bottom: 60px;
+}
+
+/* GRID */
+.grid {
+  display: flex;
+  gap: 40px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+/* CARD */
+.card {
+  background: #111827;
+  padding: 30px;
+  border-radius: 16px;
+  width: 340px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 220px;
+}
+
+.card p {
+  color: #cbd5e1;
+  margin-top: 10px;
+  line-height: 1.5;
+}
+
+/* FORM */
+form {
+  max-width: 500px;
+  margin: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+input, textarea {
+  padding: 12px;
+  border-radius: 8px;
+  border: none;
+  background: #111827;
+  color: white;
+}
+
+/* FOOTER */
+footer {
+  text-align: center;
+  padding: 30px;
+  color: #64748b;
+}
+</style>
+
+</head>
+
+<body>
+
+<!-- NAV -->
+<nav>
+  <div><strong>XAVORIS Solutions</strong></div>
+  <div>
+    <a href="#services">Services</a>
+    <a href="#ticket">Ticket</a>
+    <a href="#redesign">Redesign</a>
+    <a href="#contact">Kontakt</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <h1>XAVORIS</h1>
+  <p>Moderne digitale Lösungen für Webseiten, Ticketsysteme und Redesigns.</p>
+  <a class="btn" href="#services">Starten</a>
+</div>
+
+<!-- SERVICES -->
+<section id="services">
+  <h2>Dienstleistungen</h2>
+
+  <div class="grid">
+
+    <div class="card">
+      <div>
+        <h3>🎫 Ticketsystem</h3>
+        <p>Probleme melden, Status verfolgen und Updates erhalten.</p>
+      </div>
+      <a class="btn" href="#ticket">Öffnen</a>
+    </div>
+
+    <div class="card">
+      <div>
+        <h3>🖥️ Website Redesign</h3>
+        <p>Wir modernisieren deine Webseite mit neuem Design und Struktur.</p>
+      </div>
+      <a class="btn" href="#redesign">Öffnen</a>
+    </div>
+
+  </div>
+</section>
+
+<!-- TICKET -->
+<section id="ticket">
+  <h2>Ticketsystem</h2>
+
+  <!-- FIX: E-MAIL FUNKTION -->
+  <form action="https://formsubmit.co/kenanoz2011ch@gmail.com" method="POST">
+    <input type="hidden" name="_captcha" value="false">
+
+    <input type="text" name="name" placeholder="Name" required>
+    <input type="email" name="email" placeholder="E-Mail" required>
+    <textarea name="message" rows="6" placeholder="Beschreibe dein Problem" required></textarea>
+
+    <button class="btn" type="submit">Ticket senden</button>
+  </form>
+</section>
+
+<!-- REDESIGN -->
+<section id="redesign">
+  <h2>Website Redesign</h2>
+
+  <!-- FIX: E-MAIL FUNKTION -->
+  <form action="https://formsubmit.co/kenanoz2011ch@gmail.com" method="POST">
+    <input type="hidden" name="_captcha" value="false">
+
+    <input type="text" name="website" placeholder="Website URL">
+    <input type="email" name="email" placeholder="E-Mail" required>
+    <textarea name="message" rows="6" placeholder="Was soll verbessert werden?" required></textarea>
+
+    <button class="btn" type="submit">Anfrage senden</button>
+  </form>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+  <h2>Kontakt</h2>
+
+  <div style="text-align:center; color:#cbd5e1; line-height:2;">
+    <p><strong>Name:</strong> Kenan Öztürk</p>
+    <p><strong>E-Mail:</strong> kenanoz2011ch@gmail.com</p>
+    <p><strong>Standort:</strong> Zürich, Schweiz 📍</p>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  © 2026 XAVORIS Solutions • Kenan Öztürk • Zürich
+</footer>
+
+</body>
+</html>
