@@ -1,3 +1,4 @@
+```html
 <!DOCTYPE html>
 <html lang="de">
 
@@ -372,7 +373,10 @@
                             method="POST"
                         >
 
-                            <button class="checkbox">
+                            <button
+                                type="submit"
+                                class="checkbox"
+                            >
 
                                 {% if task.done %}
                                     ✓
@@ -429,7 +433,10 @@
                             method="POST"
                         >
 
-                            <button class="delete">
+                            <button
+                                type="submit"
+                                class="delete"
+                            >
                                 ×
                             </button>
 
@@ -563,7 +570,10 @@
             >
 
 
-            <select onchange="filterSubject(this.value)">
+            <select
+                id="subjectFilter"
+                onchange="filterSubject(this.value)"
+            >
 
                 <option value="all">
                     Alle Fächer
@@ -591,7 +601,10 @@
 
 
 
-        <div class="panel all-tasks">
+        <div
+            id="allTasks"
+            class="panel all-tasks"
+        >
 
 
             {% for task in tasks %}
@@ -607,7 +620,10 @@
                     method="POST"
                 >
 
-                    <button class="checkbox">
+                    <button
+                        type="submit"
+                        class="checkbox"
+                    >
 
                         {% if task.done %}
                             ✓
@@ -1037,3 +1053,4 @@
 </body>
 
 </html>
+```
