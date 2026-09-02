@@ -1,83 +1,43 @@
-/* =========================================================
-   SCHOOLTASK
-   Aufgabenverwaltung + Kalender + Statistik + Speicherung
-   ========================================================= */
-
-
-/* ================= STORAGE ================= */
-
 const STORAGE_KEY = "schooltask_tasks";
 const THEME_KEY = "schooltask_theme";
-
 
 let tasks = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
 
 let currentFilter = "all";
-
 let selectedSubject = null;
-
 let calendarDate = new Date();
 
 
-/* ================= ELEMENTS ================= */
-
-const pages = document.querySelectorAll(".page");
-
-const navItems = document.querySelectorAll(".nav-item");
-
-const pageTitle = document.getElementById("pageTitle");
-
-const currentDateElement = document.getElementById("currentDate");
-
-const modal = document.getElementById("taskModal");
-
-const taskForm = document.getElementById("taskForm");
-
-const openTaskButton = document.getElementById("openTaskButton");
-
-const closeModalButton = document.getElementById("closeModal");
-
-const cancelModalButton = document.getElementById("cancelModal");
-
-const themeButton = document.getElementById("themeButton");
-
-const themeIcon = document.getElementById("themeIcon");
-
-
-/* ================= INITIALISIERUNG ================= */
+// =========================
+// DOM CONTENT LOADED
+// =========================
 
 document.addEventListener("DOMContentLoaded", () => {
 
     setupNavigation();
-
     setupModal();
-
     setupFilters();
-
     setupCalendar();
-
     setupSubjects();
-
     setupTheme();
 
     updateDate();
-
     renderEverything();
 
 });
 
 
-/* ================= DATUM ================= */
+// =========================
+// DATE
+// =========================
 
 function getTodayString() {
 
-    const date = new Date();
+    const today = new Date();
 
-    const year = date.getFullYear();
-
-    const month = String(date.getMonth() + 1).padStart(2, "0");
-
-    const day = String(date.getDate()).padStart(2, "0");
+    const year = today.getFullYear();
+    const month = String(today.getMonth() + 1).padStart(2, "0");
+    const day = String(today.getDate()).padStart(2, "0");
 
     return `${year}-${month}-${day}`;
 }
@@ -112,33 +72,66 @@ function formatLongDate(date) {
 
 function updateDate() {
 
-    currentDateElement.textContent = formatLongDate(new Date());
+    const currentDate = document.getElementById("currentDate");
 
+    if (!currentDate) {
+        return;
+    }
+
+    currentDate.textContent = formatLongDate(new Date());
 }
 
 
-/* ================= NAVIGATION ================= */
+// =========================
+// NAVIGATION
+// =========================
 
 function setupNavigation() {
 
-    navItems.forEach(button => {
+    const navItems = document.querySelectorAll(".nav-item");
 
-        button.addEventListener("click", () => {
+    navItems.forEach(item => {
 
-            const page = button.dataset.page;
+        item.addEventListener("click", () => {
 
-            showPage(page);
+            const page = item.dataset.page;
 
-        });
+            if (!page) {
+                return;
+            }
 
-    });
+            navItems.forEach(nav => {
+                nav.classList.remove("active");
+            });
 
+            item.classList.add("active");
 
-    document.querySelectorAll("[data-go]").forEach(button => {
+            document.querySelectorAll(".page").forEach(pageElement => {
+                pageElement.classList.remove("active");
+            });
 
-        button.addEventListener("click", () => {
+            const selectedPage =
+                document.getElementById(page + "Page");
 
-            showPage(button.dataset.go);
+            if (selectedPage) {
+                selectedPage.classList.add("active");
+            }
+
+            const pageTitles = {
+                dashboard: "Dashboard",
+                tasks: "Aufgaben",
+                calendar: "Kalender",
+                subjects: "Fächer",
+                statistics: "Statistik"
+            };
+
+            const pageTitle =
+                document.getElementById("pageTitle");
+
+            if (pageTitle) {
+                pageTitle.textContent =
+                    pageTitles[page] || "SchoolTask";
+            }
 
         });
 
@@ -147,119 +140,179 @@ function setupNavigation() {
 }
 
 
-function showPage(pageName) {
-
-    pages.forEach(page => {
-
-        page.classList.remove("active-page");
-
-    });
-
-
-    const target = document.getElementById(pageName);
-
-    if (target) {
-        target.classList.add("active-page");
-    }
-
-
-    navItems.forEach(button => {
-
-        button.classList.toggle(
-            "active",
-            button.dataset.page === pageName
-        );
-
-    });
-
-
-    const titles = {
-        dashboard: "Dashboard",
-        tasks: "Aufgaben",
-        calendar: "Kalender",
-        subjects: "Fächer",
-        statistics: "Statistik"
-    };
-
-
-    pageTitle.textContent = titles[pageName] || "SchoolTask";
-
-    window.scrollTo({
-        top: 0,
-        behavior: "smooth"
-    });
-
-}
-
-
-/* ================= MODAL ================= */
+// =========================
+// MODAL
+// =========================
 
 function setupModal() {
 
-    openTaskButton.addEventListener("click", openModal);
+    const modal = document.getElementById("taskModal");
 
-    closeModalButton.addEventListener("click", closeModal);
+    const openModalButton =
+        document.getElementById("openModal");
 
-    cancelModalButton.addEventListener("click", closeModal);
+    const openModalTasksButton =
+        document.getElementById("openModalTasks");
+
+    const closeModalButton =
+        document.getElementById("closeModal");
+
+    const cancelModalButton =
+        document.getElementById("cancelModal");
+
+    const taskForm =
+        document.getElementById("taskForm");
 
 
-    modal.addEventListener("click", event => {
+    if (openModalButton) {
 
-        if (event.target === modal) {
-            closeModal();
-        }
+        openModalButton.addEventListener("click", openModal);
 
-    });
+    }
 
 
-    taskForm.addEventListener("submit", event => {
+    if (openModalTasksButton) {
 
-        event.preventDefault();
+        openModalTasksButton.addEventListener("click", openModal);
 
-        createTask();
+    }
 
-    });
+
+    if (closeModalButton) {
+
+        closeModalButton.addEventListener("click", closeModal);
+
+    }
+
+
+    if (cancelModalButton) {
+
+        cancelModalButton.addEventListener("click", closeModal);
+
+    }
+
+
+    if (modal) {
+
+        modal.addEventListener("click", event => {
+
+            if (event.target === modal) {
+                closeModal();
+            }
+
+        });
+
+    }
+
+
+    if (taskForm) {
+
+        taskForm.addEventListener("submit", event => {
+
+            event.preventDefault();
+
+            createTask();
+
+        });
+
+    }
 
 }
 
 
 function openModal() {
 
-    modal.classList.add("open");
+    const modal =
+        document.getElementById("taskModal");
 
-    document.getElementById("taskTitle").focus();
+    if (!modal) {
+        return;
+    }
 
-    document.getElementById("taskDate").value = getTodayString();
+    modal.classList.add("active");
+
+    const dateInput =
+        document.getElementById("taskDate");
+
+    if (dateInput) {
+
+        dateInput.value =
+            getTodayString();
+
+    }
+
+    setTimeout(() => {
+
+        const titleInput =
+            document.getElementById("taskTitle");
+
+        if (titleInput) {
+            titleInput.focus();
+        }
+
+    }, 100);
 
 }
 
 
 function closeModal() {
 
-    modal.classList.remove("open");
+    const modal =
+        document.getElementById("taskModal");
 
-    taskForm.reset();
+    if (!modal) {
+        return;
+    }
+
+    modal.classList.remove("active");
+
+    const form =
+        document.getElementById("taskForm");
+
+    if (form) {
+        form.reset();
+    }
 
 }
 
 
-/* ================= AUFGABE ERSTELLEN ================= */
+// =========================
+// CREATE TASK
+// =========================
 
 function createTask() {
 
-    const title = document.getElementById("taskTitle").value.trim();
+    const title =
+        document.getElementById("taskTitle").value.trim();
 
-    const subject = document.getElementById("taskSubject").value;
+    const subject =
+        document.getElementById("taskSubject").value;
 
-    const date = document.getElementById("taskDate").value;
+    const date =
+        document.getElementById("taskDate").value;
 
-    const note = document.getElementById("taskNote").value.trim();
+    const category =
+        document.getElementById("taskCategory").value;
+
+    const note =
+        document.getElementById("taskNote").value.trim();
+
 
     const priorityElement =
-        document.querySelector('input[name="priority"]:checked');
+        document.querySelector(
+            'input[name="priority"]:checked'
+        );
 
 
-    if (!title || !subject || !date) {
+    const priority =
+        priorityElement
+            ? priorityElement.value
+            : "medium";
+
+
+    if (!title || !subject || !date || !category) {
+
+        alert("Bitte fülle alle Pflichtfelder aus.");
 
         return;
 
@@ -276,9 +329,9 @@ function createTask() {
 
         date: date,
 
-        priority: priorityElement
-            ? priorityElement.value
-            : "medium",
+        category: category,
+
+        priority: priority,
 
         note: note,
 
@@ -300,7 +353,9 @@ function createTask() {
 }
 
 
-/* ================= SPEICHERN ================= */
+// =========================
+// STORAGE
+// =========================
 
 function saveTasks() {
 
@@ -312,11 +367,14 @@ function saveTasks() {
 }
 
 
-/* ================= AUFGABE ERLEDIGT ================= */
+// =========================
+// TASK ACTIONS
+// =========================
 
 function toggleTask(id) {
 
-    const task = tasks.find(task => task.id === id);
+    const task =
+        tasks.find(task => task.id === id);
 
     if (!task) {
         return;
@@ -331,18 +389,17 @@ function toggleTask(id) {
 }
 
 
-/* ================= AUFGABE LÖSCHEN ================= */
-
 function deleteTask(id) {
 
-    const task = tasks.find(task => task.id === id);
+    const confirmed =
+        confirm("Möchtest du diese Aufgabe wirklich löschen?");
 
-    if (!task) {
+    if (!confirmed) {
         return;
     }
 
-
-    tasks = tasks.filter(task => task.id !== id);
+    tasks =
+        tasks.filter(task => task.id !== id);
 
     saveTasks();
 
@@ -351,7 +408,340 @@ function deleteTask(id) {
 }
 
 
-/* ================= AUFGABEN HTML ================= */
+// =========================
+// DASHBOARD
+// =========================
+
+function renderDashboard() {
+
+    const total =
+        tasks.length;
+
+    const completed =
+        tasks.filter(task => task.completed).length;
+
+    const open =
+        tasks.filter(task => !task.completed).length;
+
+
+    const today =
+        getTodayString();
+
+
+    const todayTasks =
+        tasks.filter(task => task.date === today);
+
+
+    const totalTasks =
+        document.getElementById("totalTasks");
+
+    const completedTasks =
+        document.getElementById("completedTasks");
+
+    const openTasks =
+        document.getElementById("openTasks");
+
+    const todayTasksElement =
+        document.getElementById("todayTasks");
+
+
+    if (totalTasks) {
+        totalTasks.textContent = total;
+    }
+
+    if (completedTasks) {
+        completedTasks.textContent = completed;
+    }
+
+    if (openTasks) {
+        openTasks.textContent = open;
+    }
+
+    if (todayTasksElement) {
+        todayTasksElement.textContent =
+            todayTasks.length;
+    }
+
+
+    renderWeekTasks();
+
+    renderUpcomingTasks();
+
+    updateProgress();
+
+}
+
+
+// =========================
+// WEEK FUNCTIONS
+// =========================
+
+function dateToString(date) {
+
+    const year =
+        date.getFullYear();
+
+    const month =
+        String(date.getMonth() + 1)
+            .padStart(2, "0");
+
+    const day =
+        String(date.getDate())
+            .padStart(2, "0");
+
+
+    return `${year}-${month}-${day}`;
+
+}
+
+
+function getStartOfWeek(date) {
+
+    const result =
+        new Date(date);
+
+    result.setHours(0, 0, 0, 0);
+
+
+    const day =
+        result.getDay();
+
+
+    const difference =
+        day === 0
+            ? -6
+            : 1 - day;
+
+
+    result.setDate(
+        result.getDate() + difference
+    );
+
+
+    return result;
+
+}
+
+
+function getWeekDateRange(weekOffset = 0) {
+
+    const start =
+        getStartOfWeek(new Date());
+
+
+    start.setDate(
+        start.getDate() +
+        (weekOffset * 7)
+    );
+
+
+    const end =
+        new Date(start);
+
+
+    end.setDate(
+        end.getDate() + 6
+    );
+
+
+    return {
+
+        start: dateToString(start),
+
+        end: dateToString(end),
+
+        startDate: start,
+
+        endDate: end
+
+    };
+
+}
+
+
+function formatWeekRange(startDate, endDate) {
+
+    const options = {
+
+        day: "2-digit",
+
+        month: "2-digit"
+
+    };
+
+
+    return `${startDate.toLocaleDateString(
+        "de-CH",
+        options
+    )} – ${endDate.toLocaleDateString(
+        "de-CH",
+        options
+    )}`;
+
+}
+
+
+function renderWeekTasks() {
+
+    const thisWeek =
+        getWeekDateRange(0);
+
+    const nextWeek =
+        getWeekDateRange(1);
+
+
+    const thisWeekTasks =
+        tasks
+            .filter(task =>
+                task.date >= thisWeek.start &&
+                task.date <= thisWeek.end
+            )
+            .sort(sortTasks);
+
+
+    const nextWeekTasks =
+        tasks
+            .filter(task =>
+                task.date >= nextWeek.start &&
+                task.date <= nextWeek.end
+            )
+            .sort(sortTasks);
+
+
+    const thisWeekRange =
+        document.getElementById("thisWeekRange");
+
+    const nextWeekRange =
+        document.getElementById("nextWeekRange");
+
+
+    if (thisWeekRange) {
+
+        thisWeekRange.textContent =
+            formatWeekRange(
+                thisWeek.startDate,
+                thisWeek.endDate
+            );
+
+    }
+
+
+    if (nextWeekRange) {
+
+        nextWeekRange.textContent =
+            formatWeekRange(
+                nextWeek.startDate,
+                nextWeek.endDate
+            );
+
+    }
+
+
+    const thisWeekList =
+        document.getElementById("thisWeekList");
+
+    const nextWeekList =
+        document.getElementById("nextWeekList");
+
+
+    if (thisWeekList) {
+
+        if (thisWeekTasks.length === 0) {
+
+            thisWeekList.innerHTML = `
+                <div class="empty-state">
+                    <span>Keine Aufgaben diese Woche</span>
+                </div>
+            `;
+
+        } else {
+
+            thisWeekList.innerHTML =
+                thisWeekTasks
+                    .map(createTaskHTML)
+                    .join("");
+
+        }
+
+    }
+
+
+    if (nextWeekList) {
+
+        if (nextWeekTasks.length === 0) {
+
+            nextWeekList.innerHTML = `
+                <div class="empty-state">
+                    <span>Keine Aufgaben nächste Woche</span>
+                </div>
+            `;
+
+        } else {
+
+            nextWeekList.innerHTML =
+                nextWeekTasks
+                    .map(createTaskHTML)
+                    .join("");
+
+        }
+
+    }
+
+}
+
+
+// =========================
+// UPCOMING TASKS
+// =========================
+
+function renderUpcomingTasks() {
+
+    const upcomingList =
+        document.getElementById("upcomingList");
+
+    if (!upcomingList) {
+        return;
+    }
+
+
+    const today =
+        getTodayString();
+
+
+    const upcomingTasks =
+        tasks
+            .filter(task =>
+                task.date >= today &&
+                !task.completed
+            )
+            .sort(sortTasks)
+            .slice(0, 5);
+
+
+    if (upcomingTasks.length === 0) {
+
+        upcomingList.innerHTML = `
+            <div class="empty-state">
+                <span>Keine offenen Aufgaben</span>
+            </div>
+        `;
+
+        return;
+
+    }
+
+
+    upcomingList.innerHTML =
+        upcomingTasks
+            .map(createTaskHTML)
+            .join("");
+
+}
+
+
+// =========================
+// TASK HTML
+// =========================
 
 function createTaskHTML(task) {
 
@@ -366,37 +756,70 @@ function createTaskHTML(task) {
     };
 
 
+    const categoryNames = {
+
+        exam: "Prüfung",
+
+        homework: "Hausaufgaben",
+
+        other: "Anderes"
+
+    };
+
+
+    const category =
+        task.category || "other";
+
+
     return `
+
         <div class="task-item ${task.completed ? "completed" : ""}">
 
-            <button
-                class="task-check"
-                onclick="toggleTask(${task.id})"
-                aria-label="Aufgabe erledigen"
-            >
+            <div
+                class="task-checkbox"
+                onclick="toggleTask(${task.id})">
+
                 ${task.completed ? "✓" : ""}
-            </button>
+
+            </div>
 
 
             <div class="task-content">
 
                 <div class="task-title">
+
                     ${escapeHTML(task.title)}
+
                 </div>
 
 
                 <div class="task-meta">
 
-                    <span class="task-subject">
-                        ${escapeHTML(task.subject)}
+                    <span class="category ${category}">
+
+                        ${categoryNames[category] || "Anderes"}
+
                     </span>
+
+
+                    <span class="task-subject">
+
+                        ${escapeHTML(task.subject)}
+
+                    </span>
+
 
                     <span class="task-date">
+
                         ${formatDate(task.date)}
+
                     </span>
 
+
                     <span class="priority ${task.priority}">
+
                         ${priorityNames[task.priority]}
+
                     </span>
 
                 </div>
@@ -404,159 +827,47 @@ function createTaskHTML(task) {
             </div>
 
 
-            <div class="task-actions">
+            <button
+                class="delete-task"
+                onclick="deleteTask(${task.id})"
+                title="Aufgabe löschen">
 
-                <button
-                    class="task-action delete"
-                    onclick="deleteTask(${task.id})"
-                    title="Löschen"
-                >
-                    🗑
-                </button>
+                ×
 
-            </div>
+            </button>
 
         </div>
+
     `;
 
 }
 
 
-/* ================= DASHBOARD ================= */
-
-function renderDashboard() {
-
-    const today = getTodayString();
-
-
-    const total = tasks.length;
-
-    const completed = tasks.filter(
-        task => task.completed
-    ).length;
-
-    const open = tasks.filter(
-        task => !task.completed
-    ).length;
-
-    const todayTasks = tasks.filter(
-        task =>
-            task.date === today &&
-            !task.completed
-    );
-
-
-    document.getElementById("totalTasks").textContent = total;
-
-    document.getElementById("openTasks").textContent = open;
-
-    document.getElementById("completedTasks").textContent = completed;
-
-    document.getElementById("todayTasks").textContent =
-        todayTasks.length;
-
-
-    renderTodayTasks();
-
-    renderUpcomingTasks();
-
-    updateProgress();
-
-}
-
-
-function renderTodayTasks() {
-
-    const container =
-        document.getElementById("todayList");
-
-
-    const today = getTodayString();
-
-
-    const todayTasks = tasks
-
-        .filter(task => task.date === today)
-
-        .sort(sortTasks);
-
-
-    if (todayTasks.length === 0) {
-
-        container.innerHTML = emptyState(
-            "🎉",
-            "Keine Aufgaben für heute",
-            "Du hast heute nichts fällig."
-        );
-
-        return;
-
-    }
-
-
-    container.innerHTML =
-        todayTasks.map(createTaskHTML).join("");
-
-}
-
-
-function renderUpcomingTasks() {
-
-    const container =
-        document.getElementById("upcomingList");
-
-
-    const today = getTodayString();
-
-
-    const upcoming = tasks
-
-        .filter(task =>
-            task.date >= today &&
-            !task.completed
-        )
-
-        .sort(sortTasks)
-
-        .slice(0, 5);
-
-
-    if (upcoming.length === 0) {
-
-        container.innerHTML = emptyState(
-            "✓",
-            "Alles erledigt",
-            "Momentan stehen keine Aufgaben an."
-        );
-
-        return;
-
-    }
-
-
-    container.innerHTML =
-        upcoming.map(createTaskHTML).join("");
-
-}
-
-
-/* ================= AUFGABEN SEITE ================= */
+// =========================
+// FILTER
+// =========================
 
 function setupFilters() {
 
-    document.querySelectorAll(".filter").forEach(button => {
+    const filterButtons =
+        document.querySelectorAll(".filter-button");
+
+
+    filterButtons.forEach(button => {
 
         button.addEventListener("click", () => {
 
-            document.querySelectorAll(".filter")
-                .forEach(item =>
-                    item.classList.remove("active")
-                );
+            filterButtons.forEach(btn => {
+                btn.classList.remove("active");
+            });
 
 
             button.classList.add("active");
 
-            currentFilter = button.dataset.filter;
+
+            currentFilter =
+                button.dataset.filter;
+
 
             renderAllTasks();
 
@@ -569,72 +880,80 @@ function setupFilters() {
 
 function renderAllTasks() {
 
-    const container =
+    const list =
         document.getElementById("allTasksList");
 
+    if (!list) {
+        return;
+    }
 
-    let filtered = [...tasks];
+
+    let filteredTasks =
+        [...tasks];
 
 
     if (currentFilter === "open") {
 
-        filtered = filtered.filter(
-            task => !task.completed
-        );
+        filteredTasks =
+            filteredTasks.filter(
+                task => !task.completed
+            );
 
     }
 
 
     if (currentFilter === "completed") {
 
-        filtered = filtered.filter(
-            task => task.completed
-        );
+        filteredTasks =
+            filteredTasks.filter(
+                task => task.completed
+            );
 
     }
 
 
     if (currentFilter === "today") {
 
-        filtered = filtered.filter(
-            task => task.date === getTodayString()
-        );
+        const today =
+            getTodayString();
+
+        filteredTasks =
+            filteredTasks.filter(
+                task => task.date === today
+            );
 
     }
 
 
-    filtered.sort(sortTasks);
+    filteredTasks.sort(sortTasks);
 
 
-    if (filtered.length === 0) {
+    if (filteredTasks.length === 0) {
 
-        container.innerHTML = emptyState(
-            "✓",
-            "Keine Aufgaben",
-            "Hier gibt es momentan nichts zu sehen."
-        );
+        list.innerHTML = `
+            <div class="empty-state">
+                <span>Keine Aufgaben gefunden</span>
+            </div>
+        `;
 
         return;
 
     }
 
 
-    container.innerHTML =
-        filtered.map(createTaskHTML).join("");
+    list.innerHTML =
+        filteredTasks
+            .map(createTaskHTML)
+            .join("");
 
 }
 
 
-/* ================= SORTIERUNG ================= */
+// =========================
+// SORT
+// =========================
 
 function sortTasks(a, b) {
-
-    if (a.date !== b.date) {
-
-        return a.date.localeCompare(b.date);
-
-    }
-
 
     if (a.completed !== b.completed) {
 
@@ -643,43 +962,43 @@ function sortTasks(a, b) {
     }
 
 
+    if (a.date !== b.date) {
+
+        return a.date.localeCompare(b.date);
+
+    }
+
+
     const priorityOrder = {
+
         high: 0,
+
         medium: 1,
+
         low: 2
+
     };
 
 
-    return (
-        priorityOrder[a.priority] -
-        priorityOrder[b.priority]
-    );
+    const priorityA =
+        priorityOrder[a.priority] ?? 1;
+
+    const priorityB =
+        priorityOrder[b.priority] ?? 1;
+
+
+    return priorityA - priorityB;
 
 }
 
 
-/* ================= FÄCHER ================= */
+// =========================
+// SUBJECTS
+// =========================
 
 function setupSubjects() {
 
-    document.querySelectorAll(".subject-card")
-        .forEach(card => {
-
-            card.addEventListener("click", () => {
-
-                selectedSubject =
-                    card.dataset.subject;
-
-                renderSubjectDetails();
-
-                document.getElementById("subjectDetails")
-                    .scrollIntoView({
-                        behavior: "smooth"
-                    });
-
-            });
-
-        });
+    renderSubjects();
 
 }
 
@@ -687,105 +1006,60 @@ function setupSubjects() {
 function renderSubjects() {
 
     const subjects = [
+
         "ABU",
+
         "Mathe",
+
         "Englisch",
+
         "Modul"
+
     ];
 
 
     subjects.forEach(subject => {
 
-        const count = tasks.filter(
-            task => task.subject === subject
-        ).length;
-
-
-        const id =
-            "count" +
-            subject.replace("ä", "a");
+        const count =
+            tasks.filter(
+                task => task.subject === subject
+            ).length;
 
 
         const element =
-            document.getElementById(id);
+            document.getElementById(
+                "count" + subject
+            );
 
 
         if (element) {
 
             element.textContent =
-                `${count} ${count === 1 ? "Aufgabe" : "Aufgaben"}`;
+                count;
 
         }
 
     });
 
-
-    renderSubjectDetails();
-
 }
 
 
-function renderSubjectDetails() {
-
-    const title =
-        document.getElementById("selectedSubjectTitle");
-
-    const list =
-        document.getElementById("subjectTaskList");
-
-
-    if (!selectedSubject) {
-
-        title.textContent = "Wähle ein Fach";
-
-        list.innerHTML = emptyState(
-            "📚",
-            "Noch kein Fach ausgewählt",
-            "Klicke oben auf ein Fach."
-        );
-
-        return;
-
-    }
-
-
-    title.textContent = selectedSubject;
-
-
-    const subjectTasks = tasks
-
-        .filter(task =>
-            task.subject === selectedSubject
-        )
-
-        .sort(sortTasks);
-
-
-    if (subjectTasks.length === 0) {
-
-        list.innerHTML = emptyState(
-            "✓",
-            "Keine Aufgaben",
-            `Für ${selectedSubject} gibt es noch keine Aufgaben.`
-        );
-
-        return;
-
-    }
-
-
-    list.innerHTML =
-        subjectTasks.map(createTaskHTML).join("");
-
-}
-
-
-/* ================= KALENDER ================= */
+// =========================
+// CALENDAR
+// =========================
 
 function setupCalendar() {
 
-    document.getElementById("previousMonth")
-        .addEventListener("click", () => {
+    const previous =
+        document.getElementById("prevMonth");
+
+    const next =
+        document.getElementById("nextMonth");
+
+
+    if (previous) {
+
+        previous.addEventListener("click", () => {
 
             calendarDate.setMonth(
                 calendarDate.getMonth() - 1
@@ -795,9 +1069,12 @@ function setupCalendar() {
 
         });
 
+    }
 
-    document.getElementById("nextMonth")
-        .addEventListener("click", () => {
+
+    if (next) {
+
+        next.addEventListener("click", () => {
 
             calendarDate.setMonth(
                 calendarDate.getMonth() + 1
@@ -807,23 +1084,23 @@ function setupCalendar() {
 
         });
 
-
-    document.getElementById("todayButton")
-        .addEventListener("click", () => {
-
-            calendarDate = new Date();
-
-            renderCalendar();
-
-        });
+    }
 
 }
 
 
 function renderCalendar() {
 
-    const grid =
+    const calendarGrid =
         document.getElementById("calendarGrid");
+
+    const calendarMonth =
+        document.getElementById("calendarMonth");
+
+
+    if (!calendarGrid || !calendarMonth) {
+        return;
+    }
 
 
     const year =
@@ -833,7 +1110,7 @@ function renderCalendar() {
         calendarDate.getMonth();
 
 
-    const monthName =
+    calendarMonth.textContent =
         calendarDate.toLocaleDateString(
             "de-CH",
             {
@@ -843,154 +1120,153 @@ function renderCalendar() {
         );
 
 
-    document.getElementById("calendarTitle")
-        .textContent =
-        capitalize(monthName);
-
-
     const firstDay =
         new Date(year, month, 1);
 
 
-    let startDay =
+    let startingDay =
         firstDay.getDay();
 
 
-    if (startDay === 0) {
-        startDay = 7;
+    if (startingDay === 0) {
+        startingDay = 7;
     }
 
 
     const daysInMonth =
-        new Date(year, month + 1, 0).getDate();
+        new Date(
+            year,
+            month + 1,
+            0
+        ).getDate();
 
 
     const previousMonthDays =
-        new Date(year, month, 0).getDate();
+        new Date(
+            year,
+            month,
+            0
+        ).getDate();
 
 
     let html = "";
 
 
-    for (let i = startDay - 1; i > 0; i--) {
+    for (
+        let i = startingDay - 1;
+        i > 0;
+        i--
+    ) {
 
         const day =
             previousMonthDays - i + 1;
 
-
-        html += createCalendarDay(
-            day,
-            year,
-            month - 1,
-            true
-        );
+        html += `
+            <div class="calendar-day other-month">
+                <span>${day}</span>
+            </div>
+        `;
 
     }
 
 
-    for (let day = 1; day <= daysInMonth; day++) {
+    for (
+        let day = 1;
+        day <= daysInMonth;
+        day++
+    ) {
 
-        html += createCalendarDay(
-            day,
-            year,
-            month,
-            false
-        );
-
-    }
+        const dateString =
+            `${year}-${String(month + 1).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
 
 
-    const cellsUsed =
-        startDay - 1 + daysInMonth;
+        const dayTasks =
+            tasks.filter(
+                task => task.date === dateString
+            );
 
 
-    const remaining =
-        Math.ceil(cellsUsed / 7) * 7 -
-        cellsUsed;
+        const today =
+            new Date();
 
 
-    for (let day = 1; day <= remaining; day++) {
-
-        html += createCalendarDay(
-            day,
-            year,
-            month + 1,
-            true
-        );
-
-    }
+        const isToday =
+            day === today.getDate() &&
+            month === today.getMonth() &&
+            year === today.getFullYear();
 
 
-    grid.innerHTML = html;
+        html += `
 
-}
+            <div class="calendar-day ${isToday ? "today" : ""}">
 
-
-function createCalendarDay(
-    day,
-    year,
-    month,
-    otherMonth
-) {
-
-    const date =
-        new Date(year, month, day);
-
-
-    const dateString =
-        `${date.getFullYear()}-${String(
-            date.getMonth() + 1
-        ).padStart(2, "0")}-${String(
-            date.getDate()
-        ).padStart(2, "0")}`;
-
-
-    const todayClass =
-        dateString === getTodayString()
-            ? "today"
-            : "";
-
-
-    const tasksForDay =
-        tasks.filter(
-            task => task.date === dateString
-        );
-
-
-    const taskHTML =
-        tasksForDay
-
-            .slice(0, 3)
-
-            .map(task => `
-                <span class="calendar-task ${task.priority === "high" ? "high" : ""}">
-                    ${escapeHTML(task.title)}
+                <span>
+                    ${day}
                 </span>
-            `)
 
-            .join("");
+                <div class="calendar-tasks">
+
+                    ${dayTasks
+                        .slice(0, 3)
+                        .map(task => `
+                            <div
+                                class="calendar-task ${task.completed ? "completed" : ""}"
+                                onclick="toggleTask(${task.id})">
+
+                                ${escapeHTML(task.title)}
+
+                            </div>
+                        `)
+                        .join("")}
+
+                </div>
+
+            </div>
+
+        `;
+
+    }
 
 
-    return `
-        <div class="calendar-day ${otherMonth ? "other-month" : ""} ${todayClass}">
+    const totalCells =
+        startingDay - 1 +
+        daysInMonth;
 
-            <span class="day-number">
-                ${day}
-            </span>
 
-            ${taskHTML}
+    const remainingCells =
+        Math.ceil(totalCells / 7) * 7 -
+        totalCells;
 
-        </div>
-    `;
+
+    for (
+        let day = 1;
+        day <= remainingCells;
+        day++
+    ) {
+
+        html += `
+            <div class="calendar-day other-month">
+                <span>${day}</span>
+            </div>
+        `;
+
+    }
+
+
+    calendarGrid.innerHTML = html;
 
 }
 
 
-/* ================= STATISTIK ================= */
+// =========================
+// STATISTICS
+// =========================
 
 function renderStatistics() {
 
-    const total = tasks.length;
+    const total =
+        tasks.length;
+
 
     const completed =
         tasks.filter(
@@ -999,54 +1275,73 @@ function renderStatistics() {
 
 
     const open =
-        total - completed;
-
-
-    const today =
         tasks.filter(
-            task =>
-                task.date === getTodayString() &&
-                !task.completed
+            task => !task.completed
         ).length;
 
 
-    const percent =
-        total === 0
-            ? 0
-            : Math.round(
-                (completed / total) * 100
-            );
+    const completedElement =
+        document.getElementById(
+            "statisticsCompleted"
+        );
 
 
-    document.getElementById("statisticsPercent")
-        .textContent = `${percent}%`;
+    const openElement =
+        document.getElementById(
+            "statisticsOpen"
+        );
 
 
-    document.getElementById("statisticsBar")
-        .style.width = `${percent}%`;
+    if (completedElement) {
+        completedElement.textContent =
+            completed;
+    }
 
 
-    document.getElementById("summaryTotal")
-        .textContent = total;
+    if (openElement) {
+        openElement.textContent =
+            open;
+    }
 
 
-    document.getElementById("summaryOpen")
-        .textContent = open;
+    const completedBar =
+        document.getElementById(
+            "completedBar"
+        );
 
 
-    document.getElementById("summaryCompleted")
-        .textContent = completed;
+    const openBar =
+        document.getElementById(
+            "openBar"
+        );
 
 
-    document.getElementById("summaryToday")
-        .textContent = today;
+    const completedPercentage =
+        total > 0
+            ? (completed / total) * 100
+            : 0;
 
 
-    document.getElementById("statisticsDescription")
-        .textContent =
-        total === 0
-            ? "Noch keine Aufgaben."
-            : `${completed} von ${total} Aufgaben erledigt.`;
+    const openPercentage =
+        total > 0
+            ? (open / total) * 100
+            : 0;
+
+
+    if (completedBar) {
+
+        completedBar.style.width =
+            `${completedPercentage}%`;
+
+    }
+
+
+    if (openBar) {
+
+        openBar.style.width =
+            `${openPercentage}%`;
+
+    }
 
 
     renderSubjectStatistics();
@@ -1057,14 +1352,26 @@ function renderStatistics() {
 function renderSubjectStatistics() {
 
     const container =
-        document.getElementById("subjectStatistics");
+        document.getElementById(
+            "subjectStatistics"
+        );
+
+
+    if (!container) {
+        return;
+    }
 
 
     const subjects = [
+
         "ABU",
+
         "Mathe",
+
         "Englisch",
+
         "Modul"
+
     ];
 
 
@@ -1077,35 +1384,20 @@ function renderSubjectStatistics() {
                 ).length;
 
 
-            const completed =
-                tasks.filter(
-                    task =>
-                        task.subject === subject &&
-                        task.completed
-                ).length;
-
-
-            const percent =
-                count === 0
-                    ? 0
-                    : Math.round(
-                        (completed / count) * 100
-                    );
-
-
             return `
-                <div class="subject-stat">
 
-                    <div class="subject-stat-header">
-                        <span>${subject}</span>
-                        <span>${completed}/${count}</span>
-                    </div>
+                <div class="subject-stat-row">
 
-                    <div class="subject-stat-bar">
-                        <div style="width: ${percent}%"></div>
-                    </div>
+                    <span>
+                        ${subject}
+                    </span>
+
+                    <strong>
+                        ${count}
+                    </strong>
 
                 </div>
+
             `;
 
         }).join("");
@@ -1113,7 +1405,9 @@ function renderSubjectStatistics() {
 }
 
 
-/* ================= PROGRESS ================= */
+// =========================
+// PROGRESS
+// =========================
 
 function updateProgress() {
 
@@ -1127,80 +1421,131 @@ function updateProgress() {
         ).length;
 
 
-    const percent =
+    const open =
+        tasks.filter(
+            task => !task.completed
+        ).length;
+
+
+    const percentage =
         total === 0
             ? 0
             : Math.round(
-                completed / total * 100
+                (completed / total) * 100
             );
 
 
-    document.getElementById("progressPercent")
-        .textContent = `${percent}%`;
+    const progressPercent =
+        document.getElementById(
+            "progressPercent"
+        );
 
 
-    const degrees =
-        percent * 3.6;
+    const progressCompleted =
+        document.getElementById(
+            "progressCompleted"
+        );
 
 
-    document.getElementById("progressCircle")
-        .style.background =
-        `conic-gradient(
-            var(--primary) ${degrees}deg,
-            var(--border) ${degrees}deg
-        )`;
+    const progressOpen =
+        document.getElementById(
+            "progressOpen"
+        );
 
 
-    document.getElementById("progressText")
-        .textContent =
-        total === 0
-            ? "Noch keine Aufgaben vorhanden."
-            : `${completed} von ${total} Aufgaben erledigt.`;
+    if (progressPercent) {
+
+        progressPercent.textContent =
+            `${percentage}%`;
+
+    }
+
+
+    if (progressCompleted) {
+
+        progressCompleted.textContent =
+            completed;
+
+    }
+
+
+    if (progressOpen) {
+
+        progressOpen.textContent =
+            open;
+
+    }
+
+
+    const circle =
+        document.querySelector(
+            ".progress-circle"
+        );
+
+
+    if (circle) {
+
+        circle.style.setProperty(
+            "--progress",
+            `${percentage}%`
+        );
+
+    }
 
 }
 
 
-/* ================= DARK MODE ================= */
+// =========================
+// DARK MODE
+// =========================
 
 function setupTheme() {
 
+    const toggle =
+        document.getElementById(
+            "themeToggle"
+        );
+
+
     const savedTheme =
-        localStorage.getItem(THEME_KEY);
+        localStorage.getItem(
+            THEME_KEY
+        );
 
 
     if (savedTheme === "dark") {
 
         document.body.classList.add("dark");
 
-        themeIcon.textContent = "☀";
-
     }
 
 
-    themeButton.addEventListener("click", () => {
+    if (toggle) {
 
-        document.body.classList.toggle("dark");
+        toggle.addEventListener("click", () => {
 
-
-        const isDark =
-            document.body.classList.contains("dark");
+            document.body.classList.toggle("dark");
 
 
-        localStorage.setItem(
-            THEME_KEY,
-            isDark ? "dark" : "light"
-        );
+            const isDark =
+                document.body.classList.contains("dark");
 
 
-        themeIcon.textContent =
-            isDark ? "☀" : "☾";
+            localStorage.setItem(
+                THEME_KEY,
+                isDark ? "dark" : "light"
+            );
 
-    });
+        });
+
+    }
 
 }
 
 
-/* ================= ALLES AKTUALISIEREN ================= */
+// =========================
+// RENDER EVERYTHING
+// =========================
 
 function renderEverything() {
 
@@ -1217,63 +1562,47 @@ function renderEverything() {
 }
 
 
-/* ================= EMPTY STATE ================= */
+// =========================
+// EMPTY STATE
+// =========================
 
-function emptyState(
-    icon,
-    title,
-    text
-) {
+function emptyState(message = "Keine Aufgaben vorhanden") {
 
     return `
+
         <div class="empty-state">
 
-            <div class="empty-icon">
-                ${icon}
-            </div>
-
-            <strong>
-                ${title}
-            </strong>
-
             <span>
-                ${text}
+                ${message}
             </span>
 
         </div>
+
     `;
 
 }
 
 
-/* ================= SICHERHEIT ================= */
+// =========================
+// SECURITY
+// =========================
 
-function escapeHTML(value) {
+function escapeHTML(text) {
 
     const div =
         document.createElement("div");
 
-    div.textContent = value;
+    div.textContent =
+        text || "";
 
     return div.innerHTML;
 
 }
 
 
-/* ================= HILFSFUNKTIONEN ================= */
-
-function capitalize(text) {
-
-    if (!text) {
-        return "";
-    }
-
-    return text.charAt(0).toUpperCase() + text.slice(1);
-
-}
-
-
-/* ================= GLOBALE FUNKTIONEN ================= */
+// =========================
+// GLOBAL FUNCTIONS
+// =========================
 
 window.toggleTask = toggleTask;
 
