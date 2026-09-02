@@ -17,13 +17,16 @@
 
 <div class="app">
 
-    <!-- SIDEBAR -->
+    <!-- =========================
+         SIDEBAR
+    ========================== -->
+
     <aside class="sidebar">
 
         <div class="logo">
-            <div class="logo-icon">✓</div>
-            <div>
-                <h1>SchoolTask</h1>
+            <div class="logo-icon">S</div>
+            <div class="logo-text">
+                <strong>SchoolTask</strong>
                 <span>Deine Aufgaben. Dein Überblick.</span>
             </div>
         </div>
@@ -41,17 +44,17 @@
             </button>
 
             <button class="nav-item" data-page="calendar">
-                <span class="nav-icon">▦</span>
+                <span class="nav-icon">□</span>
                 <span>Kalender</span>
             </button>
 
             <button class="nav-item" data-page="subjects">
-                <span class="nav-icon">▤</span>
+                <span class="nav-icon">▦</span>
                 <span>Fächer</span>
             </button>
 
             <button class="nav-item" data-page="statistics">
-                <span class="nav-icon">◒</span>
+                <span class="nav-icon">▥</span>
                 <span>Statistik</span>
             </button>
 
@@ -59,13 +62,8 @@
 
         <div class="sidebar-bottom">
 
-            <div class="mini-info">
-                <span class="mini-info-title">SchoolTask</span>
-                <span class="mini-info-text">Alles im Überblick.</span>
-            </div>
-
-            <button class="theme-button" id="themeButton">
-                <span id="themeIcon">☾</span>
+            <button class="theme-toggle" id="themeToggle">
+                <span class="nav-icon">◐</span>
                 <span>Dark Mode</span>
             </button>
 
@@ -74,126 +72,300 @@
     </aside>
 
 
-    <!-- MAIN -->
+    <!-- =========================
+         MAIN
+    ========================== -->
+
     <main class="main">
 
         <!-- TOPBAR -->
+
         <header class="topbar">
 
-            <div>
-                <span class="date-label" id="currentDate"></span>
-                <h2 id="pageTitle">Dashboard</h2>
+            <div class="topbar-left">
+
+                <div class="current-date" id="currentDate">
+                    Mittwoch, 2. September 2026
+                </div>
+
+                <h1 id="pageTitle">
+                    Dashboard
+                </h1>
+
             </div>
 
-            <button class="add-button" id="openTaskButton">
-                <span>＋</span>
-                Aufgabe hinzufügen
+            <button class="add-task-button" id="openModal">
+                <span>+</span>
+                Neue Aufgabe
             </button>
 
         </header>
 
 
-        <!-- ================= DASHBOARD ================= -->
+        <!-- =========================
+             DASHBOARD
+        ========================== -->
 
-        <section class="page active-page" id="dashboard">
+        <section class="page active" id="dashboardPage">
 
             <div class="welcome">
+
                 <div>
-                    <p class="eyebrow">DEIN SCHULÜBERBLICK</p>
-                    <h3>Hallo 👋</h3>
-                    <p class="welcome-text">
-                        Hier siehst du alles, was heute und in den nächsten Tagen wichtig ist.
+                    <span class="section-label">ÜBERSICHT</span>
+
+                    <h2>
+                        Willkommen zurück 👋
+                    </h2>
+
+                    <p>
+                        Behalte deine Aufgaben im Blick und bleib organisiert.
                     </p>
                 </div>
 
-                <div class="welcome-mark">
-                    ✓
-                </div>
             </div>
 
 
-            <!-- STAT CARDS -->
+            <!-- STATS -->
 
             <div class="stats-grid">
 
                 <div class="stat-card">
-                    <div class="stat-icon purple">✓</div>
-                    <div>
-                        <span>Alle Aufgaben</span>
-                        <strong id="totalTasks">0</strong>
+
+                    <div class="stat-icon">
+                        ✓
                     </div>
+
+                    <div>
+                        <span class="stat-label">
+                            Aufgaben gesamt
+                        </span>
+
+                        <strong id="totalTasks">
+                            0
+                        </strong>
+                    </div>
+
                 </div>
 
-                <div class="stat-card">
-                    <div class="stat-icon orange">!</div>
-                    <div>
-                        <span>Offene Aufgaben</span>
-                        <strong id="openTasks">0</strong>
-                    </div>
-                </div>
 
                 <div class="stat-card">
-                    <div class="stat-icon green">✓</div>
-                    <div>
-                        <span>Erledigt</span>
-                        <strong id="completedTasks">0</strong>
+
+                    <div class="stat-icon">
+                        ○
                     </div>
+
+                    <div>
+                        <span class="stat-label">
+                            Offen
+                        </span>
+
+                        <strong id="openTasks">
+                            0
+                        </strong>
+                    </div>
+
                 </div>
 
+
                 <div class="stat-card">
-                    <div class="stat-icon blue">●</div>
-                    <div>
-                        <span>Heute fällig</span>
-                        <strong id="todayTasks">0</strong>
+
+                    <div class="stat-icon">
+                        ✓
                     </div>
+
+                    <div>
+                        <span class="stat-label">
+                            Erledigt
+                        </span>
+
+                        <strong id="completedTasks">
+                            0
+                        </strong>
+                    </div>
+
+                </div>
+
+
+                <div class="stat-card">
+
+                    <div class="stat-icon">
+                        ◷
+                    </div>
+
+                    <div>
+                        <span class="stat-label">
+                            Heute fällig
+                        </span>
+
+                        <strong id="todayTasks">
+                            0
+                        </strong>
+                    </div>
+
                 </div>
 
             </div>
 
 
+            <!-- DASHBOARD CONTENT -->
+
             <div class="dashboard-grid">
 
-                <!-- TODAY -->
 
-                <div class="content-card large-card">
+                <!-- WAS STEHT AN -->
+
+                <div class="card large-card">
 
                     <div class="card-header">
+
                         <div>
-                            <span class="section-label">HEUTE</span>
-                            <h3>Was steht heute an?</h3>
+
+                            <span class="section-label">
+                                PLANUNG
+                            </span>
+
+                            <h3>
+                                Was steht an?
+                            </h3>
+
                         </div>
 
-                        <button class="text-button" data-go="tasks">
-                            Alle Aufgaben →
-                        </button>
                     </div>
 
-                    <div id="todayList" class="task-list">
+
+                    <!-- DIESE WOCHE -->
+
+                    <div class="week-section">
+
+                        <div class="week-section-header">
+
+                            <div>
+
+                                <h4>
+                                    Diese Woche
+                                </h4>
+
+                                <span
+                                    id="thisWeekRange"
+                                    class="week-range">
+                                </span>
+
+                            </div>
+
+                        </div>
+
+
+                        <div
+                            id="thisWeekList"
+                            class="task-list week-task-list">
+                        </div>
+
+                    </div>
+
+
+                    <div class="week-divider"></div>
+
+
+                    <!-- NÄCHSTE WOCHE -->
+
+                    <div class="week-section">
+
+                        <div class="week-section-header">
+
+                            <div>
+
+                                <h4>
+                                    Nächste Woche
+                                </h4>
+
+                                <span
+                                    id="nextWeekRange"
+                                    class="week-range">
+                                </span>
+
+                            </div>
+
+                        </div>
+
+
+                        <div
+                            id="nextWeekList"
+                            class="task-list week-task-list">
+                        </div>
+
                     </div>
 
                 </div>
 
 
-                <!-- PROGRESS -->
 
-                <div class="content-card">
+                <!-- FORTSCHRITT -->
+
+                <div class="card progress-card">
 
                     <div class="card-header">
+
                         <div>
-                            <span class="section-label">FORTSCHRITT</span>
-                            <h3>Dein Fortschritt</h3>
+
+                            <span class="section-label">
+                                FORTSCHRITT
+                            </span>
+
+                            <h3>
+                                Dein Fortschritt
+                            </h3>
+
                         </div>
+
                     </div>
 
-                    <div class="progress-area">
 
-                        <div class="progress-circle" id="progressCircle">
-                            <span id="progressPercent">0%</span>
+                    <div class="progress-circle-container">
+
+                        <div class="progress-circle">
+
+                            <div class="progress-circle-inner">
+
+                                <strong id="progressPercent">
+                                    0%
+                                </strong>
+
+                                <span>
+                                    erledigt
+                                </span>
+
+                            </div>
+
                         </div>
 
-                        <p id="progressText">
-                            Noch keine Aufgaben vorhanden.
-                        </p>
+                    </div>
+
+
+                    <div class="progress-info">
+
+                        <div>
+
+                            <span>
+                                Erledigt
+                            </span>
+
+                            <strong id="progressCompleted">
+                                0
+                            </strong>
+
+                        </div>
+
+                        <div>
+
+                            <span>
+                                Offen
+                            </span>
+
+                            <strong id="progressOpen">
+                                0
+                            </strong>
+
+                        </div>
 
                     </div>
 
@@ -204,16 +376,28 @@
 
             <!-- UPCOMING -->
 
-            <div class="content-card">
+            <div class="card upcoming-card">
 
                 <div class="card-header">
+
                     <div>
-                        <span class="section-label">DEMNÄCHST</span>
-                        <h3>Nächste Aufgaben</h3>
+
+                        <span class="section-label">
+                            ÜBERSICHT
+                        </span>
+
+                        <h3>
+                            Nächste Aufgaben
+                        </h3>
+
                     </div>
+
                 </div>
 
-                <div id="upcomingList" class="task-list">
+
+                <div
+                    id="upcomingList"
+                    class="task-list">
                 </div>
 
             </div>
@@ -221,68 +405,137 @@
         </section>
 
 
-        <!-- ================= TASKS ================= -->
 
-        <section class="page" id="tasks">
+        <!-- =========================
+             AUFGABEN
+        ========================== -->
 
-            <div class="page-intro">
+        <section class="page" id="tasksPage">
+
+            <div class="page-header">
+
                 <div>
-                    <span class="section-label">AUFGABEN</span>
-                    <h3>Alle deine Aufgaben</h3>
-                    <p>Behalte Abgaben und offene Aufgaben im Blick.</p>
+
+                    <span class="section-label">
+                        VERWALTUNG
+                    </span>
+
+                    <h2>
+                        Aufgaben
+                    </h2>
+
+                    <p>
+                        Verwalte alle deine Aufgaben.
+                    </p>
+
                 </div>
+
+                <button
+                    class="add-task-button"
+                    id="openModalTasks">
+                    <span>+</span>
+                    Neue Aufgabe
+                </button>
+
             </div>
 
 
-            <div class="filter-bar">
+            <!-- FILTER -->
 
-                <button class="filter active" data-filter="all">
+            <div class="filters">
+
+                <button
+                    class="filter-button active"
+                    data-filter="all">
                     Alle
                 </button>
 
-                <button class="filter" data-filter="open">
+                <button
+                    class="filter-button"
+                    data-filter="open">
                     Offen
                 </button>
 
-                <button class="filter" data-filter="completed">
+                <button
+                    class="filter-button"
+                    data-filter="completed">
                     Erledigt
                 </button>
 
-                <button class="filter" data-filter="today">
+                <button
+                    class="filter-button"
+                    data-filter="today">
                     Heute
                 </button>
 
             </div>
 
 
-            <div id="allTasksList" class="task-list full-list">
+            <div class="card">
+
+                <div
+                    id="allTasksList"
+                    class="task-list">
+                </div>
+
             </div>
 
         </section>
 
 
-        <!-- ================= CALENDAR ================= -->
 
-        <section class="page" id="calendar">
+        <!-- =========================
+             KALENDER
+        ========================== -->
 
-            <div class="page-intro">
+        <section class="page" id="calendarPage">
+
+            <div class="page-header">
+
                 <div>
-                    <span class="section-label">KALENDER</span>
-                    <h3 id="calendarTitle">September 2026</h3>
-                    <p>Deine Aufgaben nach Datum.</p>
+
+                    <span class="section-label">
+                        PLANUNG
+                    </span>
+
+                    <h2>
+                        Kalender
+                    </h2>
+
+                    <p>
+                        Deine Aufgaben nach Datum.
+                    </p>
+
                 </div>
 
-                <div class="calendar-controls">
-                    <button id="previousMonth">‹</button>
-                    <button id="todayButton">Heute</button>
-                    <button id="nextMonth">›</button>
-                </div>
             </div>
 
 
-            <div class="calendar-card">
+            <div class="card calendar-card">
+
+                <div class="calendar-header">
+
+                    <button
+                        class="calendar-nav"
+                        id="prevMonth">
+                        ‹
+                    </button>
+
+                    <h3 id="calendarMonth">
+                        September 2026
+                    </h3>
+
+                    <button
+                        class="calendar-nav"
+                        id="nextMonth">
+                        ›
+                    </button>
+
+                </div>
+
 
                 <div class="calendar-weekdays">
+
                     <span>Mo</span>
                     <span>Di</span>
                     <span>Mi</span>
@@ -290,9 +543,13 @@
                     <span>Fr</span>
                     <span>Sa</span>
                     <span>So</span>
+
                 </div>
 
-                <div class="calendar-grid" id="calendarGrid">
+
+                <div
+                    id="calendarGrid"
+                    class="calendar-grid">
                 </div>
 
             </div>
@@ -300,73 +557,122 @@
         </section>
 
 
-        <!-- ================= SUBJECTS ================= -->
 
-        <section class="page" id="subjects">
+        <!-- =========================
+             FÄCHER
+        ========================== -->
 
-            <div class="page-intro">
+        <section class="page" id="subjectsPage">
+
+            <div class="page-header">
+
                 <div>
-                    <span class="section-label">FÄCHER</span>
-                    <h3>Deine Fächer</h3>
-                    <p>Wähle ein Fach aus, um die Aufgaben zu sehen.</p>
+
+                    <span class="section-label">
+                        ORGANISATION
+                    </span>
+
+                    <h2>
+                        Fächer
+                    </h2>
+
+                    <p>
+                        Deine Aufgaben nach Fach.
+                    </p>
+
                 </div>
+
             </div>
 
 
             <div class="subjects-grid">
 
-                <button class="subject-card abu" data-subject="ABU">
-                    <div class="subject-icon">A</div>
-                    <div>
-                        <h3>ABU</h3>
-                        <p id="countABU">0 Aufgaben</p>
+
+                <div class="subject-card">
+
+                    <div class="subject-icon">
+                        A
                     </div>
-                    <span>→</span>
-                </button>
 
+                    <div class="subject-info">
 
-                <button class="subject-card math" data-subject="Mathe">
-                    <div class="subject-icon">M</div>
-                    <div>
-                        <h3>Mathe</h3>
-                        <p id="countMathe">0 Aufgaben</p>
+                        <h3>
+                            ABU
+                        </h3>
+
+                        <span>
+                            <span id="countABU">0</span>
+                            Aufgaben
+                        </span>
+
                     </div>
-                    <span>→</span>
-                </button>
 
-
-                <button class="subject-card english" data-subject="Englisch">
-                    <div class="subject-icon">E</div>
-                    <div>
-                        <h3>Englisch</h3>
-                        <p id="countEnglisch">0 Aufgaben</p>
-                    </div>
-                    <span>→</span>
-                </button>
-
-
-                <button class="subject-card module" data-subject="Modul">
-                    <div class="subject-icon">M</div>
-                    <div>
-                        <h3>Modul</h3>
-                        <p id="countModul">0 Aufgaben</p>
-                    </div>
-                    <span>→</span>
-                </button>
-
-            </div>
-
-
-            <div class="content-card subject-details" id="subjectDetails">
-
-                <div class="card-header">
-                    <div>
-                        <span class="section-label">AUSGEWÄHLTES FACH</span>
-                        <h3 id="selectedSubjectTitle">Wähle ein Fach</h3>
-                    </div>
                 </div>
 
-                <div id="subjectTaskList" class="task-list">
+
+                <div class="subject-card">
+
+                    <div class="subject-icon">
+                        M
+                    </div>
+
+                    <div class="subject-info">
+
+                        <h3>
+                            Mathe
+                        </h3>
+
+                        <span>
+                            <span id="countMathe">0</span>
+                            Aufgaben
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                <div class="subject-card">
+
+                    <div class="subject-icon">
+                        E
+                    </div>
+
+                    <div class="subject-info">
+
+                        <h3>
+                            Englisch
+                        </h3>
+
+                        <span>
+                            <span id="countEnglisch">0</span>
+                            Aufgaben
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                <div class="subject-card">
+
+                    <div class="subject-icon">
+                        M
+                    </div>
+
+                    <div class="subject-info">
+
+                        <h3>
+                            Modul
+                        </h3>
+
+                        <span>
+                            <span id="countModul">0</span>
+                            Aufgaben
+                        </span>
+
+                    </div>
+
                 </div>
 
             </div>
@@ -374,93 +680,137 @@
         </section>
 
 
-        <!-- ================= STATISTICS ================= -->
 
-        <section class="page" id="statistics">
+        <!-- =========================
+             STATISTIK
+        ========================== -->
 
-            <div class="page-intro">
+        <section class="page" id="statisticsPage">
+
+            <div class="page-header">
+
                 <div>
-                    <span class="section-label">STATISTIK</span>
-                    <h3>Dein Fortschritt</h3>
-                    <p>Ein Überblick über deine Aufgaben.</p>
+
+                    <span class="section-label">
+                        AUSWERTUNG
+                    </span>
+
+                    <h2>
+                        Statistik
+                    </h2>
+
+                    <p>
+                        Behalte deinen Fortschritt im Überblick.
+                    </p>
+
                 </div>
+
             </div>
 
 
             <div class="statistics-grid">
 
-                <div class="content-card">
+
+                <div class="card statistic-main-card">
 
                     <div class="card-header">
+
                         <div>
-                            <span class="section-label">GESAMT</span>
-                            <h3>Aufgabenfortschritt</h3>
+
+                            <span class="section-label">
+                                AUFGABEN
+                            </span>
+
+                            <h3>
+                                Aufgabenstatus
+                            </h3>
+
                         </div>
+
                     </div>
 
-                    <div class="big-progress">
 
-                        <strong id="statisticsPercent">0%</strong>
+                    <div class="statistic-bars">
 
-                        <div class="progress-bar">
-                            <div id="statisticsBar"></div>
+                        <div class="statistic-bar-item">
+
+                            <div class="statistic-bar-label">
+
+                                <span>
+                                    Erledigt
+                                </span>
+
+                                <strong id="statisticsCompleted">
+                                    0
+                                </strong>
+
+                            </div>
+
+                            <div class="bar">
+
+                                <div
+                                    id="completedBar"
+                                    class="bar-fill">
+                                </div>
+
+                            </div>
+
                         </div>
 
-                        <p id="statisticsDescription">
-                            Noch keine Aufgaben.
-                        </p>
+
+                        <div class="statistic-bar-item">
+
+                            <div class="statistic-bar-label">
+
+                                <span>
+                                    Offen
+                                </span>
+
+                                <strong id="statisticsOpen">
+                                    0
+                                </strong>
+
+                            </div>
+
+                            <div class="bar">
+
+                                <div
+                                    id="openBar"
+                                    class="bar-fill">
+                                </div>
+
+                            </div>
+
+                        </div>
 
                     </div>
 
                 </div>
 
 
-                <div class="content-card">
+
+                <div class="card">
 
                     <div class="card-header">
+
                         <div>
-                            <span class="section-label">FÄCHER</span>
-                            <h3>Aufgaben pro Fach</h3>
+
+                            <span class="section-label">
+                                FÄCHER
+                            </span>
+
+                            <h3>
+                                Aufgaben pro Fach
+                            </h3>
+
                         </div>
+
                     </div>
 
-                    <div id="subjectStatistics">
-                    </div>
 
-                </div>
-
-            </div>
-
-
-            <div class="content-card">
-
-                <div class="card-header">
-                    <div>
-                        <span class="section-label">ÜBERSICHT</span>
-                        <h3>Zusammenfassung</h3>
-                    </div>
-                </div>
-
-                <div class="summary-grid">
-
-                    <div>
-                        <span>Alle Aufgaben</span>
-                        <strong id="summaryTotal">0</strong>
-                    </div>
-
-                    <div>
-                        <span>Offen</span>
-                        <strong id="summaryOpen">0</strong>
-                    </div>
-
-                    <div>
-                        <span>Erledigt</span>
-                        <strong id="summaryCompleted">0</strong>
-                    </div>
-
-                    <div>
-                        <span>Heute</span>
-                        <strong id="summaryToday">0</strong>
+                    <div
+                        id="subjectStatistics"
+                        class="subject-statistics">
                     </div>
 
                 </div>
@@ -474,82 +824,206 @@
 </div>
 
 
-<!-- ================= MODAL ================= -->
 
-<div class="modal-overlay" id="taskModal">
+<!-- =========================
+     TASK MODAL
+========================== -->
+
+<div
+    class="modal-overlay"
+    id="taskModal">
 
     <div class="modal">
 
+
         <div class="modal-header">
+
             <div>
-                <span class="section-label">NEUE AUFGABE</span>
-                <h3>Aufgabe hinzufügen</h3>
+
+                <span class="section-label">
+                    NEUE AUFGABE
+                </span>
+
+                <h2>
+                    Aufgabe hinzufügen
+                </h2>
+
             </div>
 
-            <button class="close-button" id="closeModal">×</button>
+
+            <button
+                class="modal-close"
+                id="closeModal">
+                ×
+            </button>
+
         </div>
+
 
 
         <form id="taskForm">
 
+
+            <!-- TITEL -->
+
             <div class="form-group">
-                <label for="taskTitle">Titel</label>
+
+                <label for="taskTitle">
+                    Aufgabe
+                </label>
+
                 <input
                     type="text"
                     id="taskTitle"
-                    placeholder="z. B. Mathe Aufgabenblatt 5"
-                    required
-                >
+                    placeholder="z. B. Mathe Übungen 5–8"
+                    required>
+
             </div>
 
+
+
+            <!-- FACH + DATUM -->
 
             <div class="form-row">
 
                 <div class="form-group">
-                    <label for="taskSubject">Fach</label>
 
-                    <select id="taskSubject" required>
-                        <option value="">Fach auswählen</option>
-                        <option value="ABU">ABU</option>
-                        <option value="Mathe">Mathe</option>
-                        <option value="Englisch">Englisch</option>
-                        <option value="Modul">Modul</option>
+                    <label for="taskSubject">
+                        Fach
+                    </label>
+
+                    <select
+                        id="taskSubject"
+                        required>
+
+                        <option value="">
+                            Fach auswählen
+                        </option>
+
+                        <option value="ABU">
+                            ABU
+                        </option>
+
+                        <option value="Mathe">
+                            Mathe
+                        </option>
+
+                        <option value="Englisch">
+                            Englisch
+                        </option>
+
+                        <option value="Modul">
+                            Modul
+                        </option>
+
                     </select>
+
                 </div>
 
 
                 <div class="form-group">
-                    <label for="taskDate">Abgabe</label>
+
+                    <label for="taskDate">
+                        Datum
+                    </label>
 
                     <input
                         type="date"
                         id="taskDate"
-                        required
-                    >
+                        required>
+
                 </div>
 
             </div>
 
 
+
+            <!-- KATEGORIE -->
+
             <div class="form-group">
 
-                <label>Priorität</label>
+                <label for="taskCategory">
+                    Kategorie
+                </label>
+
+                <select
+                    id="taskCategory"
+                    required>
+
+                    <option value="">
+                        Kategorie auswählen
+                    </option>
+
+                    <option value="exam">
+                        Prüfung
+                    </option>
+
+                    <option value="homework">
+                        Hausaufgaben
+                    </option>
+
+                    <option value="other">
+                        Anderes
+                    </option>
+
+                </select>
+
+            </div>
+
+
+
+            <!-- PRIORITÄT -->
+
+            <div class="form-group">
+
+                <label>
+                    Priorität
+                </label>
+
 
                 <div class="priority-options">
 
-                    <label class="priority-option">
-                        <input type="radio" name="priority" value="low">
-                        <span>Niedrig</span>
+
+                    <label class="priority-option low">
+
+                        <input
+                            type="radio"
+                            name="priority"
+                            value="low">
+
+                        <span>
+                            Niedrig
+                        </span>
+
                     </label>
 
-                    <label class="priority-option">
-                        <input type="radio" name="priority" value="medium" checked>
-                        <span>Mittel</span>
+
+                    <label class="priority-option medium">
+
+                        <input
+                            type="radio"
+                            name="priority"
+                            value="medium"
+                            checked>
+
+                        <span>
+                            Mittel
+                        </span>
+
                     </label>
 
-                    <label class="priority-option">
-                        <input type="radio" name="priority" value="high">
-                        <span>Hoch</span>
+
+                    <label class="priority-option high">
+
+                        <input
+                            type="radio"
+                            name="priority"
+                            value="high">
+
+                        <span>
+                            Hoch
+                        </span>
+
                     </label>
 
                 </div>
@@ -557,30 +1031,44 @@
             </div>
 
 
+
+            <!-- NOTIZ -->
+
             <div class="form-group">
 
-                <label for="taskNote">Notiz <span>(optional)</span></label>
+                <label for="taskNote">
+                    Notiz
+                </label>
 
                 <textarea
                     id="taskNote"
-                    placeholder="Zusätzliche Informationen..."
-                    rows="3"
-                ></textarea>
+                    rows="4"
+                    placeholder="Optionale Notiz...">
+                </textarea>
 
             </div>
 
 
+
+            <!-- BUTTONS -->
+
             <div class="modal-actions">
 
-                <button type="button" class="cancel-button" id="cancelModal">
+                <button
+                    type="button"
+                    class="button secondary"
+                    id="cancelModal">
                     Abbrechen
                 </button>
 
-                <button type="submit" class="save-button">
+                <button
+                    type="submit"
+                    class="button primary">
                     Aufgabe erstellen
                 </button>
 
             </div>
+
 
         </form>
 
@@ -588,6 +1076,11 @@
 
 </div>
 
+
+
+<!-- =========================
+     JAVASCRIPT
+========================== -->
 
 <script src="script.js"></script>
 
