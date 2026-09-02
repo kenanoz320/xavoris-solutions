@@ -1,86 +1,206 @@
-function updateStats() {
+function showPage(pageId, button) {
 
-    const tasks = document.querySelectorAll(".task-card");
-
-    let done = 0;
-    let open = 0;
-
-
-    tasks.forEach(task => {
-
-        const isDone =
-            task.dataset.done === "True";
-
-
-        if (isDone) {
-            done++;
-        } else {
-            open++;
-        }
-
+    document.querySelectorAll(".page").forEach(page => {
+        page.classList.remove("active");
     });
 
 
-    document.getElementById("taskCount").textContent =
-        tasks.length;
+    document.getElementById(pageId).classList.add("active");
 
 
-    document.getElementById("doneCount").textContent =
-        done;
+    document.querySelectorAll(".nav-button").forEach(btn => {
+        btn.classList.remove("active");
+    });
 
 
-    document.getElementById("openCount").textContent =
-        open;
+    if (button) {
+        button.classList.add("active");
+    }
+
+
+    const titles = {
+
+        overview: "Übersicht",
+
+        tasks: "Aufgaben",
+
+        calendar: "Kalender",
+
+        subjects: "Fächer"
+
+    };
+
+
+    document.getElementById("pageTitle").textContent =
+        titles[pageId];
+
+
+    window.scrollTo(0, 0);
 }
 
 
 
-function filterTasks(type) {
+function openModal() {
 
-    const tasks =
-        document.querySelectorAll(".task-card");
+    document
+        .getElementById("modal")
+        .classList.add("show");
 
-
-    tasks.forEach(task => {
-
-        const isDone =
-            task.dataset.done === "True";
+}
 
 
-        if (type === "all") {
 
-            task.style.display = "flex";
+function closeModal() {
 
-        }
+    document
+        .getElementById("modal")
+        .classList.remove("show");
 
-
-        else if (
-            type === "done" &&
-            isDone
-        ) {
-
-            task.style.display = "flex";
-
-        }
+}
 
 
-        else if (
-            type === "open" &&
-            !isDone
-        ) {
 
-            task.style.display = "flex";
+document
+    .getElementById("modal")
+    .addEventListener("click", function(event) {
 
-        }
+        if (event.target.id === "modal") {
 
-
-        else {
-
-            task.style.display = "none";
+            closeModal();
 
         }
 
     });
+
+
+
+function updateStatistics() {
+
+    const tasks =
+        document.querySelectorAll(
+            "#taskList .task"
+        );
+
+
+    const total =
+        tasks.length;
+
+
+    let completed = 0;
+
+
+    tasks.forEach(task => {
+
+        if (task.dataset.done === "True") {
+
+            completed++;
+
+        }
+
+    });
+
+
+    const open =
+        total - completed;
+
+
+    let progress = 0;
+
+
+    if (total > 0) {
+
+        progress =
+            Math.round(
+                (completed / total) * 100
+            );
+
+    }
+
+
+    document.getElementById(
+        "totalTasks"
+    ).textContent = total;
+
+
+    document.getElementById(
+        "completedTasks"
+    ).textContent = completed;
+
+
+    document.getElementById(
+        "openTasks"
+    ).textContent = open;
+
+
+    document.getElementById(
+        "progress"
+    ).textContent = progress + "%";
+
+
+    document.getElementById(
+        "circleProgress"
+    ).textContent = progress + "%";
+
+}
+
+
+
+function filterTasks(type, button) {
+
+    document
+        .querySelectorAll(".filter")
+        .forEach(btn => {
+
+            btn.classList.remove("active");
+
+        });
+
+
+    button.classList.add("active");
+
+
+    document
+        .querySelectorAll("#taskList .task")
+        .forEach(task => {
+
+            const done =
+                task.dataset.done === "True";
+
+
+            if (type === "all") {
+
+                task.style.display = "flex";
+
+            }
+
+
+            else if (
+                type === "done" &&
+                done
+            ) {
+
+                task.style.display = "flex";
+
+            }
+
+
+            else if (
+                type === "open" &&
+                !done
+            ) {
+
+                task.style.display = "flex";
+
+            }
+
+
+            else {
+
+                task.style.display = "none";
+
+            }
+
+        });
 
 }
 
@@ -88,39 +208,71 @@ function filterTasks(type) {
 
 function searchTasks() {
 
+    const input =
+        document.getElementById(
+            "search"
+        );
+
+
     const search =
-        document
-            .getElementById("searchInput")
-            .value
-            .toLowerCase();
+        input.value.toLowerCase();
 
 
-    const tasks =
-        document.querySelectorAll(".task-card");
+    document
+        .querySelectorAll(
+            "#allTasks .full-task"
+        )
+        .forEach(task => {
+
+            const title =
+                task.dataset.title;
 
 
-    tasks.forEach(task => {
+            if (title.includes(search)) {
 
-        const text =
-            task.textContent.toLowerCase();
+                task.style.display = "flex";
 
+            }
 
-        if (text.includes(search)) {
+            else {
 
-            task.style.display = "flex";
+                task.style.display = "none";
 
-        }
+            }
 
-        else {
-
-            task.style.display = "none";
-
-        }
-
-    });
+        });
 
 }
 
 
 
-updateStats();
+function filterSubject(subject) {
+
+    document
+        .querySelectorAll(
+            "#allTasks .full-task"
+        )
+        .forEach(task => {
+
+            if (
+                subject === "all" ||
+                task.dataset.subject === subject
+            ) {
+
+                task.style.display = "flex";
+
+            }
+
+            else {
+
+                task.style.display = "none";
+
+            }
+
+        });
+
+}
+
+
+
+updateStatistics();
